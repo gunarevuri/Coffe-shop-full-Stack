@@ -50,7 +50,7 @@ def get_drinks_short():
 '''
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
-def drinks_detail():
+def drinks_detail(jwt):
     list_drinks=Drink.query.all()
     if list_drinks is None:
         abort(400)
@@ -75,11 +75,11 @@ def drinks_detail():
 '''
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
-def add_drinks():
+def add_drinks(jwt):
     body=request.get_json()
 
     if body is None:
-        abort(404)
+        abort(401)
     try:
         new_title=body.get('title')
         new_recipe=json.dumps(body.get('recipe'))
@@ -115,16 +115,16 @@ def add_drinks():
 '''
 @app.route('/drinks/<int:id>',methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_specific_drink(id):
+def update_specific_drink(jwt,id):
     try:
-        drink=Drink.query.filter(Drink.id==id).one_or_none()
+        drink=Drink.query.filter(Drink.id==id).first()
         if not drink:
             abort(404)
         body=request.get_json()
         for item in body.keys():
             if item=='title':
                 drink.title=body['title']
-            if item=='recipe':
+            elif item=='recipe':
                 drink.recipe=json.dumps(body['recipe'])
 
         drink.update()
@@ -135,7 +135,7 @@ def update_specific_drink(id):
             })
     except Exception as e:
         print(e)
-        abort(422)
+        abort(401)
 
 
 
@@ -152,10 +152,10 @@ def update_specific_drink(id):
 '''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_specific_drink(id):
+def delete_specific_drink(jwt,id):
     drink=Drink.query.filter(Drink.id==id).one_or_none()
     if drink is None:
-        abort(404)
+        abort(401)
 
     drink.delete()
 

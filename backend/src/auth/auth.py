@@ -34,7 +34,10 @@ class AuthError(Exception):
 def get_token_auth_header():
     head=request.headers.get('Authorization',None)
     if head is None:
-        return "no header inclueded"
+        raise AuthError({
+            'code':"herader is not present",
+            'description':"header is needed"
+            },401)
     head=head.split(' ')
     if len(head)==1 or len(head)>2:
         return jsonify({
@@ -65,12 +68,12 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'invalid_claims',
             'description': 'Permissions not included in JWT.'
-        }, 400)
+        }, 401)
 
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'unauthorized',
-            'description': 'Permission not found.'
+            'description': 'you wont have Permission to request this role.'
         }, 401)
     return True
 
@@ -133,7 +136,7 @@ def verify_decode_jwt(token):
     raise AuthError({
             'code': 'invalid_header',
             'description': 'Unable to find the appropriate key.'
-        },400)
+        },401)
 
 '''
 @TODO implement @requires_auth(permission) decorator method
