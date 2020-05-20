@@ -2,21 +2,58 @@
 
 ## Full Stack Nano - IAM Final Project
 
-Udacity has decided to open a new digitally enabled cafe for students to order drinks, socialize, and study hard. But they need help setting up their menu experience.
+Developed backend, which if flask based application and Implementing token-based authentication and authorization for each request from the client using a third-party tool Auth0. For each REST API request from the client, the token is verified and check whether the client can make a request to that endpoint by Implementing role-based control design patterns in API. The token is then verified in backend by creating rsa-key and decrypting token and checking whether payload contains permissions.
 
-You have been called on to demonstrate your newly learned skills to create a full stack drink menu application. The application must:
+
+Make sure you had enabled vertual environment.If you are using mac then follow below commands
+
+```
+cd project_directory
+
+python3 -m venv env
+
+source env/bin/activate
+
+
+```
+
+Then clone the project 
+
+```
+git clone https://github.com/gunarevuri/Coffe-shop-full-Stack.git
+```
+
+Run backend server before running frontend as frontend needs some data from backend to display the web page.
+
+
+To run this app locally you should create your own Auth0 account.
+
+```
+https://auth0.com/
+```
+
+In order to run this application follow below steps:
+
+
+- create a tenant domain and then select web based application while creating applicaiton, 
+
+- Then create specific API, name of audience
+
+    - Then it will automatically generate client id
+    
+- Then go to ./backend/api.py file replace my Auth0 tenant domain with your Auth0 domain and API audience too. 
+
+- If you want to change algorithm used to encrypt header token make sure it is changed in Auth0 account and same algorithm is used to decrypt token.In my implementation I used RS256 to sign token and decrypt token to get payload.and check for permissions
+
+
+In my Auth0 account used to 3 types of roles public, barista and manager. 
 
 1) Display graphics representing the ratios of ingredients in each drink.
 2) Allow public users to view drink names and graphics.
 3) Allow the shop baristas to see the recipe information.
 4) Allow the shop managers to create new drinks and edit existing drinks.
 
-## Tasks
 
-There are `@TODO` comments throughout the project. We recommend tackling the sections in order. Start by reading the READMEs in:
-
-1. [`./backend/`](./backend/README.md)
-2. [`./frontend/`](./frontend/README.md)
 
 ## About the Stack
 
@@ -24,8 +61,7 @@ We started the full stack application for you. It is desiged with some key funct
 
 ### Backend
 
-The `./backend` directory contains a partially completed Flask server with a pre-written SQLAlchemy module to simplify your data needs. You will need to complete the required endpoints, configure, and integrate Auth0 for authentication.
-
+README.md file present in backend directory will have the all documentation like how to run backend.
 [View the README.md within ./backend for more details.](./backend/README.md)
 
 ### Frontend
